@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import sm0keysa1m0n.network.NetworkManager;
-import sm0keysa1m0n.network.message.IMessage;
-import sm0keysa1m0n.network.message.IMessageIndex;
+import sm0keysa1m0n.network.message.Message;
+import sm0keysa1m0n.network.message.MessageIndex;
 import sm0keysa1m0n.network.util.ByteBufUtil;
+import sm0keysa1m0n.network.wrapper.NetworkManager;
 
 public class NettyMessageDecoder extends ByteToMessageDecoder {
 
@@ -22,15 +22,15 @@ public class NettyMessageDecoder extends ByteToMessageDecoder {
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		if (in.readableBytes() != 0) {
 			int discriminator = ByteBufUtil.readVarInt(in);
-			IMessageIndex index = ctx.pipeline().get(NetworkManager.class).getProtocol().getMessageIndex();
+			MessageIndex index = ctx.pipeline().get(NetworkManager.class).getMessageIndex();
 			if (index == null) {
 				throw new IllegalStateException("No message index has been set for the channel");
 			} else {
-				Class<? extends IMessage> msgClass = index.getMessage(discriminator);
+				Class<? extends Message> msgClass = index.getMessage(discriminator);
 				if (msgClass == null) {
 					throw new IOException("Unknown message discriminator " + discriminator);
 				} else {
-					IMessage msg = msgClass.newInstance();
+					Message msg = msgClass.newInstance();
 					msg.fromBytes(in);
 					if (in.readableBytes() > 0) {
 						throw new IOException("Message [" + index + ":" + discriminator + "] " + msgClass.getName()
