@@ -1,6 +1,20 @@
+buildscript {
+	repositories {
+    	jcenter()
+  	}	
+  	dependencies {
+    	classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
+  	}
+}
+
 plugins {
     id 'java-library'
+    id "com.jfrog.artifactory" version "4.7.5"
+    id 'maven'
 }
+
+project.version = '1.0.0'
+project.group = 'sm0keysa1m0n'
 
 dependencies {
 	// Netty
@@ -19,5 +33,43 @@ dependencies {
 
 repositories {
     jcenter()
+}
+
+configurations {
+	published
+}
+
+task sourceJar(type: Jar) {
+	from sourceSets.main.allSource
+	classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  	classifier = 'javadoc'
+  	from javadoc.destinationDir
+}
+
+artifactoryPublish {
+	dependsOn sourceJar, javadocJar
+}
+
+artifacts {
+	published sourceJar
+    published javadocJar
+}
+
+artifactory {
+	contextUrl = 'http://ts1:8040/artifactory'   //The base Artifactory URL if not overridden by the publisher/resolver
+  	publish {
+    	contextUrl = 'http://ts1:8040/artifactory'   //The base Artifactory URL for the publisher
+    	repository {
+            repoKey = 'gradle-dev-local'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+   		}
+    	defaults {
+      		publishConfigs('archives', 'published')
+    	}
+	}
 }
 
