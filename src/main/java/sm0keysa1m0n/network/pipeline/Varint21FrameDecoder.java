@@ -7,9 +7,15 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.CorruptedFrameException;
-import sm0keysa1m0n.network.util.ByteBufUtil;
+import sm0keysa1m0n.network.ByteBufUtil;
 
-public class NettyVarint21FrameDecoder extends ByteToMessageDecoder {
+/**
+ * A {@link ByteToMessageDecoder} which decodes framed {@link ByteBuf}s.
+ * 
+ * @author Joseph Tarbit
+ *
+ */
+public class Varint21FrameDecoder extends ByteToMessageDecoder {
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -46,5 +52,4 @@ public class NettyVarint21FrameDecoder extends ByteToMessageDecoder {
 
 		throw new CorruptedFrameException("Length wider than 21-bit");
 	}
-
 }

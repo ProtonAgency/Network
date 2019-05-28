@@ -3,9 +3,15 @@ package sm0keysa1m0n.network.pipeline;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-import sm0keysa1m0n.network.util.ByteBufUtil;
+import sm0keysa1m0n.network.ByteBufUtil;
 
-public class NettyVarint21FrameEncoder extends MessageToByteEncoder<ByteBuf> {
+/**
+ * A {@link MessageToByteEncoder} which encodes {@link ByteBuf}s into frames.
+ * 
+ * @author Joseph Tarbit
+ *
+ */
+public class Varint21FrameEncoder extends MessageToByteEncoder<ByteBuf> {
 
 	@Override
 	protected void encode(ChannelHandlerContext ctx, ByteBuf in, ByteBuf out) throws Exception {
@@ -20,5 +26,4 @@ public class NettyVarint21FrameEncoder extends MessageToByteEncoder<ByteBuf> {
 			out.writeBytes(in, in.readerIndex(), readableBytes);
 		}
 	}
-
 }

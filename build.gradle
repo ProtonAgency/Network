@@ -1,75 +1,14 @@
-buildscript {
-	repositories {
-    	jcenter()
-  	}	
-  	dependencies {
-    	classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
-  	}
-}
-
 plugins {
     id 'java-library'
-    id "com.jfrog.artifactory" version "4.7.5"
-    id 'maven'
-}
-
-project.version = '1.0.0'
-project.group = 'sm0keysa1m0n'
-
-dependencies {
-	// Netty
-	compile group: 'io.netty', name: 'netty-all', version: '4.1.30.Final'
-	// SLF4J
-	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-	// JSR305
-	compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
-	// Guava
-	compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
-	// Apache Commons Lang
-	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'	
-	// https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-	compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 }
 
 repositories {
     jcenter()
 }
 
-configurations {
-	published
-}
-
-task sourceJar(type: Jar) {
-	from sourceSets.main.allSource
-	classifier = 'sources'
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-  	classifier = 'javadoc'
-  	from javadoc.destinationDir
-}
-
-artifactoryPublish {
-	dependsOn sourceJar, javadocJar
-}
-
-artifacts {
-	published sourceJar
-    published javadocJar
-}
-
-artifactory {
-	contextUrl = 'http://ts1:8040/artifactory'   //The base Artifactory URL if not overridden by the publisher/resolver
-  	publish {
-    	contextUrl = 'http://ts1:8040/artifactory'   //The base Artifactory URL for the publisher
-    	repository {
-            repoKey = 'gradle-dev-local'
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
-   		}
-    	defaults {
-      		publishConfigs('archives', 'published')
-    	}
-	}
+dependencies {
+	api group: 'io.netty', name: 'netty-all', version: '4.1.36.Final'
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+	implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.2'	
 }
 
