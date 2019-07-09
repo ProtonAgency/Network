@@ -1,7 +1,7 @@
-package sm0keysa1m0n.network.example.echo.message.echo;
+package uk.co.tarbits.network.example.echo;
 
 import lombok.Data;
-import sm0keysa1m0n.network.protocol.IMessage;
+import uk.co.tarbits.network.protocol.IMessage;
 
 /**
  * A {@link IMessage} that holds a {@link String}.
@@ -12,6 +12,5 @@ import sm0keysa1m0n.network.protocol.IMessage;
 @Data
 public class EchoMessage implements IMessage {
 
-	private final String text;
-
+  private final String text;
 }
